@@ -7,7 +7,7 @@
     "tsc": "tsc",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "start": "tsc --watch & nodemon --inspect dist",
-    "env": "sync-dotenv --sample env.sample"
+    "build": "tsc -w"
   },
   "repository": {
     "type": "git",
