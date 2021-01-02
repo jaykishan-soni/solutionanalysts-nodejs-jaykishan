@@ -100,7 +100,6 @@ export class CommentUtils {
       await ch.sendToQueue(q, Buffer.from(qm, 'utf8'));
       return true;
     } catch (error) {
-      console.log(error.cause.code);
       return false;
     }
   }
@@ -113,7 +112,6 @@ export class CommentUtils {
       await ch.assertQueue(q).then(() =>
         ch.consume(q, async (msg) => {
           if (msg !== null) {
-            console.log(`Got message ${msg.content.toString()}`);
             const qm = JSON.parse(msg.content.toString());
             const queueData = {
               articleId: qm.articleId,
