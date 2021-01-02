@@ -1,5 +1,9 @@
 {
   "ERR_URL_NOT_FOUND": "Requested URL not found!",
   "ERR_ACTION_NOT_FOUND": "Requested action can not be performed.",
-  "ERR_NO_USER_FOUND": "Article not found!"
+  "ERR_NO_USER_FOUND": "Article not found!",
+  "MSG_ARTICLE_ADDED": "Article is added successfully.",
+  "MSG_ARTICLE_UPDATED": "Article is updated successfully.",
+  "MSG_COMMENT_ADDED": "Comment is added on an article successfully.",
+  "MSG_ON_COMMENT_ADDED": "Comment is added on a comment successfully."
 }

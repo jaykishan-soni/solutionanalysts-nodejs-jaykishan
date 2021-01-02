@@ -22,7 +22,8 @@ export class CommentUtils {
     const totalRows = await mysql.first(
       Tables.COMMENTS,
       ['COUNT(DISTINCT id) as count'],
-      `${CommentsTable.PARENT_ID} IS NULL`
+      `${CommentsTable.ARTICLE_ID} = ${articleId}
+        AND ${CommentsTable.PARENT_ID} IS NULL`
     );
     const comments = await mysql.findAll(
       `${Tables.COMMENTS} as c1
@@ -66,7 +67,9 @@ export class CommentUtils {
       `${ArticlesTable.ID} = ${articleId}`
     );
     let comment;
+    let isParent = false;
     if (getArticle && commentId) {
+      isParent = true;
       commentDetail.articleId = articleId;
       commentDetail.parent = commentId;
       comment = await mysql.insert(Tables.COMMENTS, commentDetail);
@@ -76,7 +79,7 @@ export class CommentUtils {
     }
 
     if (comment.insertId) {
-      return ResponseBuilder.data({ insert: true });
+      return ResponseBuilder.data({ insert: true, isParent });
     }
     return ResponseBuilder.data({ insert: false });
   }

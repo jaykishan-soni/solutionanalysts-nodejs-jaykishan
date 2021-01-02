@@ -18,7 +18,13 @@ export class ArticleUtils {
     );
     const articles = await mysql.findAll(
       Tables.ARTICLES,
-      [ArticlesTable.ID, ArticlesTable.NICKNAME, ArticlesTable.TITLE, ArticlesTable.CONTENT],
+      [
+        ArticlesTable.ID,
+        ArticlesTable.NICKNAME,
+        ArticlesTable.TITLE,
+        ArticlesTable.CONTENT,
+        `DATE_FORMAT(${ArticlesTable.CREATED_AT}, '%D %b, %Y at %r') AS createdAt`,
+      ],
       `${whereClause} ${orderBy} ${isLimit}`
     );
     return ResponseBuilder.data({ data: articles, totalRows: totalRows.count });
@@ -27,7 +33,13 @@ export class ArticleUtils {
   public async getArticleDetail(articleId: number): Promise<ResponseBuilder> {
     const articleDetail = await mysql.first(
       Tables.ARTICLES,
-      [ArticlesTable.ID, ArticlesTable.NICKNAME, ArticlesTable.TITLE, ArticlesTable.CONTENT],
+      [
+        ArticlesTable.ID,
+        ArticlesTable.NICKNAME,
+        ArticlesTable.TITLE,
+        ArticlesTable.CONTENT,
+        `DATE_FORMAT(${ArticlesTable.CREATED_AT}, '%D %b, %Y at %r') AS createdAt`,
+      ],
       `${ArticlesTable.ID} = ?`,
       [articleId]
     );

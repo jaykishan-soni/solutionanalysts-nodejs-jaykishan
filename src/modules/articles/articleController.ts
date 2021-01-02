@@ -27,16 +27,21 @@ export class ArticleController {
   public updateArticleDetail = async (req: any, res: Response) => {
     const { articleId } = req.params;
     const articleDetail = req.body;
-    const article: ResponseBuilder = await this.articleUtils.updateArticleDetail(articleId, articleDetail);
-    res.status(article.code).json(article.result);
+    const article: ResponseBuilder = await this.articleUtils.updateArticleDetail(
+      articleId,
+      articleDetail
+    );
+    article.result.updated
+      ? res.status(article.code).json({ message: req.t('MSG_ARTICLE_UPDATED') })
+      : res.status(Constants.FAIL_CODE).json({ error: req.t('ERR_ACTION_NOT_FOUND') });
   };
 
   // Post article
   public postArticle = async (req: any, res: Response) => {
     const articleDetail = req.body;
     const article: ResponseBuilder = await this.articleUtils.postArticle(articleDetail);
-    res.status(article.code).json(article.result);
+    article.result.insert
+      ? res.status(article.code).json({ message: req.t('MSG_ARTICLE_ADDED') })
+      : res.status(Constants.FAIL_CODE).json({ error: req.t('ERR_ACTION_NOT_FOUND') });
   };
-
-
 }
