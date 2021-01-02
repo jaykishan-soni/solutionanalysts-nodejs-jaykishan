@@ -6,6 +6,16 @@ This project is based on post an articles and guest user can comment on an artic
 
 For development, you will only need Node.js and NPM (Node Package Manager) installed in your system.
 
+### RabbitMQ
+
+For implementing message queue, You need to install and run RabbitMQ in your system
+For installing and run RabbitMQ, execute below docker command in your terminal window
+      $ sudo docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
+
+If you don't have installed docker yet, Please run below command first.
+    $ sudo snap install docker
+    $ sudo apt  install docker.io
+
 ### Node
 
 - #### Node installation on Windows

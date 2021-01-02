@@ -26,6 +26,7 @@
     "@types/moment-timezone": "^0.5.13",
     "@types/node": "^13.13.2",
     "@types/npm": "^2.0.31",
+    "amqplib": "^0.6.0",
     "class-validator": "^0.12.2",
     "compression": "^1.7.4",
     "dotenv": "^8.2.0",

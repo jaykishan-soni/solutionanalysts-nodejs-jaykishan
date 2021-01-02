@@ -4,6 +4,8 @@ import { ResponseBuilder } from '../../helpers/responseBuilder';
 import { Utils } from '../../helpers/utils';
 import { isEmpty } from 'lodash';
 
+import * as amqplib from 'amqplib';
+
 export class CommentUtils {
   // Get all comments of an article
   public async getAllComments(articleId: number, skip: number, limit: number, isSendAll: number) {
@@ -66,21 +68,69 @@ export class CommentUtils {
       [ArticlesTable.ID],
       `${ArticlesTable.ID} = ${articleId}`
     );
-    let comment;
     let isParent = false;
     if (getArticle && commentId) {
       isParent = true;
       commentDetail.articleId = articleId;
       commentDetail.parent = commentId;
-      comment = await mysql.insert(Tables.COMMENTS, commentDetail);
     } else {
       commentDetail.articleId = articleId;
-      comment = await mysql.insert(Tables.COMMENTS, commentDetail);
     }
+    const sendMessangeInQueue = await this.sendMessageQueue(commentDetail);
+    if (sendMessangeInQueue) {
+      await this.getFromMessageQueue();
+    } else {
+      await this.addInCommentDB(commentDetail);
+    }
+    return ResponseBuilder.data({ insert: true, isParent });
+  }
 
-    if (comment.insertId) {
-      return ResponseBuilder.data({ insert: true, isParent });
+  public async sendMessageQueue(commentDetail) {
+    try {
+      const q = 'comment';
+      const conn = await amqplib.connect('amqp://localhost');
+      const ch = await conn.createChannel();
+      await ch.assertQueue(q);
+      const qm = JSON.stringify({
+        articleId: commentDetail.articleId,
+        nickname: commentDetail.nickname,
+        content: commentDetail.content,
+        parent: commentDetail.parent,
+      });
+      await ch.sendToQueue(q, Buffer.from(qm, 'utf8'));
+      return true;
+    } catch (error) {
+      console.log(error.cause.code);
+      return false;
     }
-    return ResponseBuilder.data({ insert: false });
+  }
+
+  public async getFromMessageQueue() {
+    try {
+      const q = 'comment';
+      const conn = await amqplib.connect('amqp://localhost');
+      const ch = await conn.createChannel();
+      await ch.assertQueue(q).then(() =>
+        ch.consume(q, async (msg) => {
+          if (msg !== null) {
+            console.log(`Got message ${msg.content.toString()}`);
+            const qm = JSON.parse(msg.content.toString());
+            const queueData = {
+              articleId: qm.articleId,
+              parent: qm.parent,
+              nickname: qm.nickname,
+              content: qm.content,
+            };
+            await this.addInCommentDB(queueData).then(() => ch.ack(msg));
+          }
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  public async addInCommentDB(queueData) {
+    return await mysql.insert(Tables.COMMENTS, queueData);
   }
 }
