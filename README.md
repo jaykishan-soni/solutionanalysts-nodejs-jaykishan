@@ -52,4 +52,4 @@ If you need to update `npm`, you can make it using `npm`! Cool right? After runn
     $ npm build
 
 ## Postman collection to check APIs
-    You can import postman collection using think link: https://www.getpostman.com/collections/612cd85417ba1310aab7
+  You can import API collection from [Postman Collection Link](https://www.getpostman.com/collections/612cd85417ba1310aab7)
