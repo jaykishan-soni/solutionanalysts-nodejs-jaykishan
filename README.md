@@ -1,6 +1,6 @@
 # solutionanalysts-nodejs-jaykishan API
 
-This project based on post an articles and guest user can comment on an article and comment on comment of an articles too.
+This project is based on post an articles and guest user can comment on an article and comment on comment of an articles too.
 
 ## Requirements
 
