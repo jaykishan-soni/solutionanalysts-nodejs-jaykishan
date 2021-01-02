@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsOptional, Validate } from 'class-validator';
+import { IsNotEmpty, IsOptional } from 'class-validator';
 import { Model } from '../../model';
 
 export class ArticleModel extends Model {

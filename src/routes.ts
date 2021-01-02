@@ -2,6 +2,7 @@ import * as express from 'express';
 import { Constants } from './config/constants';
 
 import { ArticleRoute } from './modules/articles/articleRoute';
+import { CommentRoute } from './modules/comments/commentRoute';
 
 export class Routes {
   protected basePath: string;
@@ -27,6 +28,7 @@ export class Routes {
     const router = express.Router();
 
     router.use("/articles", ArticleRoute);
+    router.use("/comments", CommentRoute);
 
     router.all('/*', (req: any, res: any) => {
       return res.status(Constants.NOT_FOUND_CODE).json({
